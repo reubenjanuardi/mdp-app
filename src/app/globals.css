@@ -1,0 +1,486 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Theme preset styles: these override CSS variables based on the selected data-theme-preset */
+@import "../styles/presets/brutalist.css";
+@import "../styles/presets/soft-pop.css";
+@import "../styles/presets/tangerine.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+}
+
+/* Default theme styles (used when no data-theme-preset is set or when 'default' is selected).
+These serve as the fallback; there is no separate default.css file. */
+:root {
+  --radius: 0.625rem;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* fonts */
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/*
+ * Tema PT Menara Digdaya Perkasa untuk next-shadcn-admin-dashboard.
+ * Sumber: PRD bagian 9 dan file Figma "CAPSTONE" (koleksi mdp/brand, shadcn/semantic, mdp/dimensions).
+ *
+ * Pemakaian: impor setelah blok :root/.dark bawaan di src/app/globals.css, sehingga nilai ini
+ * menimpa preset default. Nilai di luar brand mengikuti shadcn neutral, dengan dua penyesuaian
+ * agar lolos WCAG AA: muted-foreground #6B6B6B (4,89:1 di atas muted) dan destructive #B91C1C.
+ */
+
+:root {
+  --radius: 0.625rem;
+
+  /* Brand (logo) */
+  --mdp-blue-900: #044984;
+  --mdp-blue-600: #0592c8;
+  --mdp-blue-300: #3bc5f2;
+  --mdp-blue-50: #e6f6fd;
+  --mdp-gray-800: #353535;
+}
+
+/* Token semantik mode terang. :not(.dark) mencegah nilai terang menimpa .dark karena urutan CSS. */
+:root:not(.dark) {
+
+  --background: #ffffff;
+  --foreground: var(--mdp-gray-800);
+  --card: #ffffff;
+  --card-foreground: var(--mdp-gray-800);
+  --popover: #ffffff;
+  --popover-foreground: var(--mdp-gray-800);
+  --primary: var(--mdp-blue-900);
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --destructive: #b91c1c;
+  --destructive-subtle: #fdecec;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: var(--mdp-blue-600);
+  --highlight: var(--mdp-blue-50);
+
+  --chart-1: var(--mdp-blue-900);
+  --chart-2: var(--mdp-blue-600);
+  --chart-3: var(--mdp-blue-300);
+  --chart-4: #a3a3a3;
+  --chart-5: #525252;
+
+  --sidebar: #fafafa;
+  --sidebar-foreground: var(--mdp-gray-800);
+  --sidebar-primary: var(--mdp-blue-900);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: var(--mdp-blue-600);
+
+  /* Status badge: latar lembut + teks gelap (PRD 9.3) */
+  --status-neutral: #f5f5f5;
+  --status-neutral-foreground: #404040;
+  --status-warning: #fef9c3;
+  --status-warning-foreground: #854d0e;
+  --status-orange: #ffedd5;
+  --status-orange-foreground: #9a3412;
+  --status-success: #dcfce7;
+  --status-success-foreground: #166534;
+  --status-danger: #fee2e2;
+  --status-danger-foreground: #991b1b;
+  --status-info: var(--mdp-blue-50);
+  --status-info-foreground: var(--mdp-blue-900);
+}
+
+.dark {
+  --primary: var(--mdp-blue-300);
+  --primary-foreground: #0a0a0a;
+  --ring: var(--mdp-blue-600);
+  --highlight: #082f49;
+  --destructive-subtle: #3b1213;
+  --chart-1: var(--mdp-blue-300);
+  --chart-2: var(--mdp-blue-600);
+  --chart-3: #1d6fa8;
+  --chart-4: #737373;
+  --chart-5: #d4d4d4;
+  --sidebar-primary: var(--mdp-blue-300);
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-ring: var(--mdp-blue-600);
+
+  --status-neutral: #262626;
+  --status-neutral-foreground: #d4d4d4;
+  --status-warning: #422006;
+  --status-warning-foreground: #fde047;
+  --status-orange: #431407;
+  --status-orange-foreground: #fdba74;
+  --status-success: #052e16;
+  --status-success-foreground: #86efac;
+  --status-danger: #450a0a;
+  --status-danger-foreground: #fca5a5;
+  --status-info: #082f49;
+  --status-info-foreground: #7dd3fc;
+}
+
+@theme inline {
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-highlight: var(--highlight);
+  --color-status-neutral: var(--status-neutral);
+  --color-status-neutral-foreground: var(--status-neutral-foreground);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-foreground: var(--status-warning-foreground);
+  --color-status-orange: var(--status-orange);
+  --color-status-orange-foreground: var(--status-orange-foreground);
+  --color-status-success: var(--status-success);
+  --color-status-success-foreground: var(--status-success-foreground);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-foreground: var(--status-danger-foreground);
+  --color-status-info: var(--status-info);
+  --color-status-info-foreground: var(--status-info-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+  html {
+    @apply font-sans;
+  }
+
+  /* R-39: semua kontrol aktif menampilkan kursor tangan; yang nonaktif menampilkan not-allowed. */
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label[for],
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  [role="switch"],
+  [role="checkbox"],
+  [role="radio"],
+  [role="option"],
+  [role="menuitem"],
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"],
+  select:disabled,
+  input:disabled {
+    cursor: not-allowed;
+  }
+
+  /* R-03: target sentuh minimal 44px pada perangkat layar sentuh. */
+  @media (pointer: coarse) {
+    button,
+    a[data-slot="button"],
+    main nav a[href],
+    [role="combobox"],
+    [data-slot="input"],
+    [data-slot="select-trigger"],
+    [data-slot="input-group"],
+    [data-slot="search-box"],
+    [data-sidebar="menu-button"],
+    [role="menuitem"],
+    [role="option"] {
+      min-height: 44px;
+    }
+    button:not([role="switch"]):not([role="checkbox"]):not([role="radio"]) {
+      min-width: 44px;
+    }
+    td a[href],
+    section a[href]:not([data-slot="button"]) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-2xs {
+    box-shadow: var(--shadow-2xs);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-xs {
+    box-shadow: var(--shadow-xs);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow {
+    box-shadow: var(--shadow);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-xl {
+    box-shadow: var(--shadow-xl);
+  }
+
+  [data-theme-preset]:not([data-theme-preset="default"]) .shadow-2xl {
+    box-shadow: var(--shadow-2xl);
+  }
+
+  html[data-font="inter"] body {
+    --font-sans: var(--font-inter);
+  }
+  html[data-font="notoSans"] body {
+    --font-sans: var(--font-noto-sans);
+  }
+  html[data-font="nunitoSans"] body {
+    --font-sans: var(--font-nunito-sans);
+  }
+  html[data-font="figtree"] body {
+    --font-sans: var(--font-figtree);
+  }
+  html[data-font="roboto"] body {
+    --font-sans: var(--font-roboto);
+  }
+  html[data-font="geist"] body {
+    --font-sans: var(--font-geist);
+  }
+  html[data-font="raleway"] body {
+    --font-sans: var(--font-raleway);
+  }
+  html[data-font="dmSans"] body {
+    --font-sans: var(--font-dm-sans);
+  }
+  html[data-font="publicSans"] body {
+    --font-sans: var(--font-public-sans);
+  }
+  html[data-font="outfit"] body {
+    --font-sans: var(--font-outfit);
+  }
+  html[data-font="geistMono"] body {
+    --font-sans: var(--font-geist-mono);
+  }
+  html[data-font="geistPixelSquare"] body {
+    --font-sans: var(--font-geist-pixel-square);
+  }
+  html[data-font="jetBrainsMono"] body {
+    --font-sans: var(--font-jetbrains-mono);
+  }
+  html[data-font="geistSerif"] body {
+    --font-sans: var(--font-geist-serif);
+  }
+  html[data-font="notoSerif"] body {
+    --font-sans: var(--font-noto-serif);
+  }
+  html[data-font="robotoSlab"] body {
+    --font-sans: var(--font-roboto-slab);
+  }
+  html[data-font="merriweather"] body {
+    --font-sans: var(--font-merriweather);
+  }
+  html[data-font="lora"] body {
+    --font-sans: var(--font-lora);
+  }
+  html[data-font="playfairDisplay"] body {
+    --font-sans: var(--font-playfair-display);
+  }
+
+  html body:has([data-landing-page]) {
+    --font-sans: var(--font-geist);
+  }
+}
+
+html {
+  overscroll-behavior-x: auto;
+  overscroll-behavior-y: none;
+}
+
+html:has([data-landing-page]) {
+  view-transition-name: none;
+}
+
+[data-landing-dashboard-preview] {
+  view-transition-name: landing-dashboard-preview;
+}
+
+::view-transition-group(landing-dashboard-preview) {
+  animation-duration: 360ms;
+  animation-timing-function: ease-out;
+}
+
+.disable-transitions * {
+  transition: none !important;
+}
+
+[data-print-root] {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body > *:not([data-print-root]) {
+    display: none !important;
+  }
+
+  [data-print-root] {
+    display: block !important;
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+
+  [data-print-root] [data-print-paper] {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-root] [data-print-paper],
+  [data-print-root] [data-print-paper] * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

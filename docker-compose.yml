@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: mdp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mdp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mdp_dev_password}
+      POSTGRES_DB: mdp
+    ports:
+      - "5433:5432"
+    volumes:
+      - mdp-pgdata:/var/lib/postgresql/data
+
+volumes:
+  mdp-pgdata:

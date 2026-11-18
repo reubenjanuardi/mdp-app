@@ -1,0 +1,1535 @@
+{
+  "id": "41c2a903-5816-4762-850c-cac40978bf63",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.barang": {
+      "name": "barang",
+      "schema": "",
+      "columns": {
+        "id_barang": {
+          "name": "id_barang",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kode_barang": {
+          "name": "kode_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama": {
+          "name": "nama",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "spesifikasi": {
+          "name": "spesifikasi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "satuan": {
+          "name": "satuan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "harga_acuan": {
+          "name": "harga_acuan",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "barang_kode_barang_unique": {
+          "name": "barang_kode_barang_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "kode_barang"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.faktur": {
+      "name": "faktur",
+      "schema": "",
+      "columns": {
+        "id_faktur": {
+          "name": "id_faktur",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pesanan": {
+          "name": "id_pesanan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tanggal_faktur": {
+          "name": "tanggal_faktur",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nominal_faktur": {
+          "name": "nominal_faktur",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nomor_nota": {
+          "name": "nomor_nota",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lampiran": {
+          "name": "lampiran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_file_lampiran": {
+          "name": "nama_file_lampiran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "koreksi_status": {
+          "name": "koreksi_status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alasan_koreksi": {
+          "name": "alasan_koreksi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dikoreksi_oleh": {
+          "name": "dikoreksi_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dikoreksi_pada": {
+          "name": "dikoreksi_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_oleh": {
+          "name": "dibuat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "faktur_nomor_nota_unik": {
+          "name": "faktur_nomor_nota_unik",
+          "columns": [
+            {
+              "expression": "nomor_nota",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "faktur_id_pesanan_pesanan_id_pesanan_fk": {
+          "name": "faktur_id_pesanan_pesanan_id_pesanan_fk",
+          "tableFrom": "faktur",
+          "tableTo": "pesanan",
+          "columnsFrom": [
+            "id_pesanan"
+          ],
+          "columnsTo": [
+            "id_pesanan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "faktur_dikoreksi_oleh_pengguna_id_pengguna_fk": {
+          "name": "faktur_dikoreksi_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "faktur",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dikoreksi_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "faktur_dibuat_oleh_pengguna_id_pengguna_fk": {
+          "name": "faktur_dibuat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "faktur",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dibuat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.faktur_barang": {
+      "name": "faktur_barang",
+      "schema": "",
+      "columns": {
+        "id_faktur_barang": {
+          "name": "id_faktur_barang",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_faktur": {
+          "name": "id_faktur",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_pesanan_barang": {
+          "name": "id_pesanan_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "urutan": {
+          "name": "urutan",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama_barang": {
+          "name": "nama_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "satuan": {
+          "name": "satuan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "banyaknya": {
+          "name": "banyaknya",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "harga_satuan": {
+          "name": "harga_satuan",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jumlah": {
+          "name": "jumlah",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "faktur_barang_id_faktur_faktur_id_faktur_fk": {
+          "name": "faktur_barang_id_faktur_faktur_id_faktur_fk",
+          "tableFrom": "faktur_barang",
+          "tableTo": "faktur",
+          "columnsFrom": [
+            "id_faktur"
+          ],
+          "columnsTo": [
+            "id_faktur"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "faktur_barang_id_pesanan_barang_pesanan_barang_id_pesanan_barang_fk": {
+          "name": "faktur_barang_id_pesanan_barang_pesanan_barang_id_pesanan_barang_fk",
+          "tableFrom": "faktur_barang",
+          "tableTo": "pesanan_barang",
+          "columnsFrom": [
+            "id_pesanan_barang"
+          ],
+          "columnsTo": [
+            "id_pesanan_barang"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.lokasi_pengiriman": {
+      "name": "lokasi_pengiriman",
+      "schema": "",
+      "columns": {
+        "id_lokasi": {
+          "name": "id_lokasi",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pelanggan": {
+          "name": "id_pelanggan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama_lokasi": {
+          "name": "nama_lokasi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alamat": {
+          "name": "alamat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "lokasi_pengiriman_id_pelanggan_pelanggan_id_pelanggan_fk": {
+          "name": "lokasi_pengiriman_id_pelanggan_pelanggan_id_pelanggan_fk",
+          "tableFrom": "lokasi_pengiriman",
+          "tableTo": "pelanggan",
+          "columnsFrom": [
+            "id_pelanggan"
+          ],
+          "columnsTo": [
+            "id_pelanggan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pelanggan": {
+      "name": "pelanggan",
+      "schema": "",
+      "columns": {
+        "id_pelanggan": {
+          "name": "id_pelanggan",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kode_pelanggan": {
+          "name": "kode_pelanggan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_perusahaan": {
+          "name": "nama_perusahaan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alamat": {
+          "name": "alamat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telepon": {
+          "name": "telepon",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kontak": {
+          "name": "kontak",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "pelanggan_kode_pelanggan_unique": {
+          "name": "pelanggan_kode_pelanggan_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "kode_pelanggan"
+          ]
+        },
+        "pelanggan_nama_perusahaan_unique": {
+          "name": "pelanggan_nama_perusahaan_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nama_perusahaan"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pembayaran": {
+      "name": "pembayaran",
+      "schema": "",
+      "columns": {
+        "id_pembayaran": {
+          "name": "id_pembayaran",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_faktur": {
+          "name": "id_faktur",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tanggal_pembayaran": {
+          "name": "tanggal_pembayaran",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nominal_pembayaran": {
+          "name": "nominal_pembayaran",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bukti_pembayaran": {
+          "name": "bukti_pembayaran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "waktu_pembayaran": {
+          "name": "waktu_pembayaran",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metode": {
+          "name": "metode",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nomor_referensi": {
+          "name": "nomor_referensi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "berita_transaksi": {
+          "name": "berita_transaksi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_penyetor": {
+          "name": "nama_penyetor",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama_file_bukti": {
+          "name": "nama_file_bukti",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_verifikasi": {
+          "name": "status_verifikasi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Menunggu Verifikasi'"
+        },
+        "diverifikasi_oleh": {
+          "name": "diverifikasi_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "diverifikasi_pada": {
+          "name": "diverifikasi_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dicatat_oleh": {
+          "name": "dicatat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alasan_tolak": {
+          "name": "alasan_tolak",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ditolak_oleh": {
+          "name": "ditolak_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pembayaran_id_faktur_faktur_id_faktur_fk": {
+          "name": "pembayaran_id_faktur_faktur_id_faktur_fk",
+          "tableFrom": "pembayaran",
+          "tableTo": "faktur",
+          "columnsFrom": [
+            "id_faktur"
+          ],
+          "columnsTo": [
+            "id_faktur"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pembayaran_diverifikasi_oleh_pengguna_id_pengguna_fk": {
+          "name": "pembayaran_diverifikasi_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "pembayaran",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "diverifikasi_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pembayaran_dicatat_oleh_pengguna_id_pengguna_fk": {
+          "name": "pembayaran_dicatat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "pembayaran",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dicatat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pembayaran_ditolak_oleh_pengguna_id_pengguna_fk": {
+          "name": "pembayaran_ditolak_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "pembayaran",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "ditolak_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.penerimaan": {
+      "name": "penerimaan",
+      "schema": "",
+      "columns": {
+        "id_penerimaan": {
+          "name": "id_penerimaan",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pengiriman": {
+          "name": "id_pengiriman",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tanggal_penerimaan": {
+          "name": "tanggal_penerimaan",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bukti_penerimaan": {
+          "name": "bukti_penerimaan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dicatat_oleh": {
+          "name": "dicatat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "penerimaan_id_pengiriman_pengiriman_id_pengiriman_fk": {
+          "name": "penerimaan_id_pengiriman_pengiriman_id_pengiriman_fk",
+          "tableFrom": "penerimaan",
+          "tableTo": "pengiriman",
+          "columnsFrom": [
+            "id_pengiriman"
+          ],
+          "columnsTo": [
+            "id_pengiriman"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "penerimaan_dicatat_oleh_pengguna_id_pengguna_fk": {
+          "name": "penerimaan_dicatat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "penerimaan",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dicatat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pengguna": {
+      "name": "pengguna",
+      "schema": "",
+      "columns": {
+        "id_pengguna": {
+          "name": "id_pengguna",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "peran": {
+          "name": "peran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama": {
+          "name": "nama",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aktif": {
+          "name": "aktif",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "wajib_ganti_password": {
+          "name": "wajib_ganti_password",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "pengguna_username_unique": {
+          "name": "pengguna_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "pengguna_email_unique": {
+          "name": "pengguna_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pengiriman": {
+      "name": "pengiriman",
+      "schema": "",
+      "columns": {
+        "id_pengiriman": {
+          "name": "id_pengiriman",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pesanan": {
+          "name": "id_pesanan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tanggal_pengiriman": {
+          "name": "tanggal_pengiriman",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nomor_resi": {
+          "name": "nomor_resi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ekspedisi": {
+          "name": "ekspedisi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jenis_pengiriman": {
+          "name": "jenis_pengiriman",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jumlah_koli": {
+          "name": "jumlah_koli",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nomor_tanda_terima": {
+          "name": "nomor_tanda_terima",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dokumen": {
+          "name": "dokumen",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_file_dokumen": {
+          "name": "nama_file_dokumen",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "keterangan": {
+          "name": "keterangan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status_pengiriman": {
+          "name": "status_pengiriman",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Dalam Kirim'"
+        },
+        "dicatat_oleh": {
+          "name": "dicatat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pengiriman_id_pesanan_pesanan_id_pesanan_fk": {
+          "name": "pengiriman_id_pesanan_pesanan_id_pesanan_fk",
+          "tableFrom": "pengiriman",
+          "tableTo": "pesanan",
+          "columnsFrom": [
+            "id_pesanan"
+          ],
+          "columnsTo": [
+            "id_pesanan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pengiriman_dicatat_oleh_pengguna_id_pengguna_fk": {
+          "name": "pengiriman_dicatat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "pengiriman",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dicatat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pesanan": {
+      "name": "pesanan",
+      "schema": "",
+      "columns": {
+        "id_pesanan": {
+          "name": "id_pesanan",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pelanggan": {
+          "name": "id_pelanggan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tanggal_po": {
+          "name": "tanggal_po",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jenis_barang": {
+          "name": "jenis_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jumlah_pesanan": {
+          "name": "jumlah_pesanan",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nomor_surat_pemesanan": {
+          "name": "nomor_surat_pemesanan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rujukan_penawaran": {
+          "name": "rujukan_penawaran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_lokasi": {
+          "name": "id_lokasi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nama_pelanggan": {
+          "name": "nama_pelanggan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alamat_pelanggan": {
+          "name": "alamat_pelanggan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lokasi_pengiriman": {
+          "name": "lokasi_pengiriman",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ketentuan_pembayaran": {
+          "name": "ketentuan_pembayaran",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tanggal_jatuh_tempo": {
+          "name": "tanggal_jatuh_tempo",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "termasuk_ppn": {
+          "name": "termasuk_ppn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "subtotal": {
+          "name": "subtotal",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ppn": {
+          "name": "ppn",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "total": {
+          "name": "total",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status_produksi": {
+          "name": "status_produksi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Dalam Proses'"
+        },
+        "alasan_tertunda": {
+          "name": "alasan_tertunda",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_oleh": {
+          "name": "dibuat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "diperbarui_pada": {
+          "name": "diperbarui_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pesanan_id_pelanggan_pelanggan_id_pelanggan_fk": {
+          "name": "pesanan_id_pelanggan_pelanggan_id_pelanggan_fk",
+          "tableFrom": "pesanan",
+          "tableTo": "pelanggan",
+          "columnsFrom": [
+            "id_pelanggan"
+          ],
+          "columnsTo": [
+            "id_pelanggan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pesanan_id_lokasi_lokasi_pengiriman_id_lokasi_fk": {
+          "name": "pesanan_id_lokasi_lokasi_pengiriman_id_lokasi_fk",
+          "tableFrom": "pesanan",
+          "tableTo": "lokasi_pengiriman",
+          "columnsFrom": [
+            "id_lokasi"
+          ],
+          "columnsTo": [
+            "id_lokasi"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pesanan_dibuat_oleh_pengguna_id_pengguna_fk": {
+          "name": "pesanan_dibuat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "pesanan",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dibuat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pesanan_barang": {
+      "name": "pesanan_barang",
+      "schema": "",
+      "columns": {
+        "id_pesanan_barang": {
+          "name": "id_pesanan_barang",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pesanan": {
+          "name": "id_pesanan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_barang": {
+          "name": "id_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "urutan": {
+          "name": "urutan",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kode_barang": {
+          "name": "kode_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nama_barang": {
+          "name": "nama_barang",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "spesifikasi": {
+          "name": "spesifikasi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "satuan": {
+          "name": "satuan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jumlah": {
+          "name": "jumlah",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "harga_satuan": {
+          "name": "harga_satuan",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subtotal": {
+          "name": "subtotal",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pesanan_barang_id_pesanan_pesanan_id_pesanan_fk": {
+          "name": "pesanan_barang_id_pesanan_pesanan_id_pesanan_fk",
+          "tableFrom": "pesanan_barang",
+          "tableTo": "pesanan",
+          "columnsFrom": [
+            "id_pesanan"
+          ],
+          "columnsTo": [
+            "id_pesanan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pesanan_barang_id_barang_barang_id_barang_fk": {
+          "name": "pesanan_barang_id_barang_barang_id_barang_fk",
+          "tableFrom": "pesanan_barang",
+          "tableTo": "barang",
+          "columnsFrom": [
+            "id_barang"
+          ],
+          "columnsTo": [
+            "id_barang"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.riwayat_produksi": {
+      "name": "riwayat_produksi",
+      "schema": "",
+      "columns": {
+        "id_riwayat": {
+          "name": "id_riwayat",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pesanan": {
+          "name": "id_pesanan",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "catatan": {
+          "name": "catatan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "diubah_oleh": {
+          "name": "diubah_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "riwayat_produksi_id_pesanan_pesanan_id_pesanan_fk": {
+          "name": "riwayat_produksi_id_pesanan_pesanan_id_pesanan_fk",
+          "tableFrom": "riwayat_produksi",
+          "tableTo": "pesanan",
+          "columnsFrom": [
+            "id_pesanan"
+          ],
+          "columnsTo": [
+            "id_pesanan"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "riwayat_produksi_diubah_oleh_pengguna_id_pengguna_fk": {
+          "name": "riwayat_produksi_diubah_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "riwayat_produksi",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "diubah_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sesi": {
+      "name": "sesi",
+      "schema": "",
+      "columns": {
+        "id_sesi": {
+          "name": "id_sesi",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_pengguna": {
+          "name": "id_pengguna",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kedaluwarsa_pada": {
+          "name": "kedaluwarsa_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dicabut_pada": {
+          "name": "dicabut_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sesi_id_pengguna_pengguna_id_pengguna_fk": {
+          "name": "sesi_id_pengguna_pengguna_id_pengguna_fk",
+          "tableFrom": "sesi",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "id_pengguna"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tindak_lanjut": {
+      "name": "tindak_lanjut",
+      "schema": "",
+      "columns": {
+        "id_tindak_lanjut": {
+          "name": "id_tindak_lanjut",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_faktur": {
+          "name": "id_faktur",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "waktu": {
+          "name": "waktu",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status_komunikasi": {
+          "name": "status_komunikasi",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "catatan": {
+          "name": "catatan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pengingat_berikutnya": {
+          "name": "pengingat_berikutnya",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dicatat_oleh": {
+          "name": "dicatat_oleh",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dihapus_pada": {
+          "name": "dihapus_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dibuat_pada": {
+          "name": "dibuat_pada",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tindak_lanjut_id_faktur_faktur_id_faktur_fk": {
+          "name": "tindak_lanjut_id_faktur_faktur_id_faktur_fk",
+          "tableFrom": "tindak_lanjut",
+          "tableTo": "faktur",
+          "columnsFrom": [
+            "id_faktur"
+          ],
+          "columnsTo": [
+            "id_faktur"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tindak_lanjut_dicatat_oleh_pengguna_id_pengguna_fk": {
+          "name": "tindak_lanjut_dicatat_oleh_pengguna_id_pengguna_fk",
+          "tableFrom": "tindak_lanjut",
+          "tableTo": "pengguna",
+          "columnsFrom": [
+            "dicatat_oleh"
+          ],
+          "columnsTo": [
+            "id_pengguna"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
