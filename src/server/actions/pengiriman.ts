@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { hariIni } from "@/lib/format";
 import { wajibAkses } from "@/server/auth/sesi";
-import { simpanBerkas } from "@/server/berkas";
+import { hapusBerkas, simpanBerkas } from "@/server/berkas";
 import { db } from "@/server/db";
 import { penerimaan, pengiriman, pesanan } from "@/server/db/schema";
 
@@ -80,31 +80,36 @@ export async function simpanPengiriman(form: FormData): Promise<Hasil<{ id: stri
   }
 
   const id = crypto.randomUUID();
-  await db.transaction(async (tx) => {
-    await tx.insert(pengiriman).values({
-      id_pengiriman: id,
-      id_pesanan: po.id_pesanan,
-      jenis_pengiriman: d.jenis,
-      ekspedisi: d.jenis === "Ekspedisi" ? d.ekspedisi : null,
-      nomor_resi: d.jenis === "Ekspedisi" ? d.nomorResi : null,
-      jumlah_koli: d.jenis === "Ekspedisi" ? d.koli : null,
-      nomor_tanda_terima: d.jenis === "Antar Langsung" ? d.nomorTtb : null,
-      tanggal_pengiriman: d.tanggal,
-      status_pengiriman: d.status,
-      dokumen,
-      nama_file_dokumen: (file as File).name,
-      dicatat_oleh: p.id,
-    });
-    if (d.status === "Selesai") {
-      await tx.insert(penerimaan).values({
-        id_penerimaan: crypto.randomUUID(),
+  try {
+    await db.transaction(async (tx) => {
+      await tx.insert(pengiriman).values({
         id_pengiriman: id,
-        tanggal_penerimaan: d.tanggal,
-        bukti_penerimaan: dokumen,
+        id_pesanan: po.id_pesanan,
+        jenis_pengiriman: d.jenis,
+        ekspedisi: d.jenis === "Ekspedisi" ? d.ekspedisi : null,
+        nomor_resi: d.jenis === "Ekspedisi" ? d.nomorResi : null,
+        jumlah_koli: d.jenis === "Ekspedisi" ? d.koli : null,
+        nomor_tanda_terima: d.jenis === "Antar Langsung" ? d.nomorTtb : null,
+        tanggal_pengiriman: d.tanggal,
+        status_pengiriman: d.status,
+        dokumen,
+        nama_file_dokumen: (file as File).name,
         dicatat_oleh: p.id,
       });
-    }
-  });
+      if (d.status === "Selesai") {
+        await tx.insert(penerimaan).values({
+          id_penerimaan: crypto.randomUUID(),
+          id_pengiriman: id,
+          tanggal_penerimaan: d.tanggal,
+          bukti_penerimaan: dokumen,
+          dicatat_oleh: p.id,
+        });
+      }
+    });
+  } catch (e) {
+    await hapusBerkas(dokumen);
+    throw e;
+  }
   revalidatePath("/dashboard", "layout");
   return {
     ok: true,

@@ -6,7 +6,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
 
 import { wajibAkses } from "@/server/auth/sesi";
-import { simpanBerkas } from "@/server/berkas";
+import { hapusBerkas, simpanBerkas } from "@/server/berkas";
 import { sisaPerBaris } from "@/server/data/tagihan";
 import { db } from "@/server/db";
 import { faktur, faktur_barang, pesanan } from "@/server/db/schema";
@@ -113,6 +113,7 @@ export async function simpanTagihan(form: FormData): Promise<Hasil<{ id: string 
       await tx.insert(faktur_barang).values(items.map((x) => ({ ...x, id_faktur: id })));
     });
   } catch {
+    await hapusBerkas(lampiran);
     // Dua pengguna menyimpan nomor yang sama bersamaan: indeks unik menolak yang kedua.
     return {
       galat: "Lengkapi isian yang ditandai.",

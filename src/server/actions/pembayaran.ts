@@ -8,7 +8,7 @@ import { z } from "zod";
 import { hariIni } from "@/lib/format";
 import { hitungTagihan } from "@/lib/status";
 import { wajibAkses } from "@/server/auth/sesi";
-import { simpanBerkas } from "@/server/berkas";
+import { hapusBerkas, simpanBerkas } from "@/server/berkas";
 import { db } from "@/server/db";
 import { faktur, pembayaran, pesanan, STATUS_TAGIHAN } from "@/server/db/schema";
 
@@ -170,21 +170,26 @@ export async function simpanPembayaran(form: FormData): Promise<Hasil<{ idPesana
   }
 
   const waktu = new Date(`${d.waktu}:00+07:00`);
-  await db.insert(pembayaran).values({
-    id_pembayaran: crypto.randomUUID(),
-    id_faktur: f.id_faktur,
-    tanggal_pembayaran: d.waktu.slice(0, 10),
-    waktu_pembayaran: waktu,
-    nominal_pembayaran: d.nominal,
-    metode: d.metode,
-    nomor_referensi: d.referensi,
-    nama_penyetor: d.penyetor,
-    berita_transaksi: d.berita ?? null,
-    bukti_pembayaran: bukti,
-    nama_file_bukti: (file as File).name,
-    status_verifikasi: "Menunggu Verifikasi",
-    dicatat_oleh: p.id,
-  });
+  try {
+    await db.insert(pembayaran).values({
+      id_pembayaran: crypto.randomUUID(),
+      id_faktur: f.id_faktur,
+      tanggal_pembayaran: d.waktu.slice(0, 10),
+      waktu_pembayaran: waktu,
+      nominal_pembayaran: d.nominal,
+      metode: d.metode,
+      nomor_referensi: d.referensi,
+      nama_penyetor: d.penyetor,
+      berita_transaksi: d.berita ?? null,
+      bukti_pembayaran: bukti,
+      nama_file_bukti: (file as File).name,
+      status_verifikasi: "Menunggu Verifikasi",
+      dicatat_oleh: p.id,
+    });
+  } catch (e) {
+    await hapusBerkas(bukti);
+    throw e;
+  }
   revalidatePath("/dashboard", "layout");
   return {
     ok: true,

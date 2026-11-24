@@ -19,6 +19,7 @@
     "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1176.0",
     "@base-ui/react": "^1.9.0",
     "@dnd-kit/abstract": "^0.5.3",
     "@dnd-kit/helpers": "^0.5.3",
