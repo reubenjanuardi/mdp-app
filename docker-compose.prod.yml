@@ -1,0 +1,101 @@
+# Compose produksi untuk VPS yang sama dengan portal-aplikasi-gereja.
+#
+# Trafik masuk lewat Cloudflare Tunnel (container cloudflared-tunnel yang sudah ada di network
+# hosiana_network), jadi aplikasi TIDAK membuka port apa pun di host. Tambahkan satu public
+# hostname di dashboard Cloudflare Zero Trust:
+#     mdp.domainmu.com  ->  http://mdp-app:3000
+#
+#   cp .env.production.example .env     # sekali saja di /opt/stacks/mdp-app, lalu isi rahasianya
+#   docker compose -f docker-compose.prod.yml --profile tools pull app migrate
+#   docker compose -f docker-compose.prod.yml --profile tools run --rm migrate
+#   docker compose -f docker-compose.prod.yml up -d
+name: mdp-app
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: mdp-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mdp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi di .env}
+      POSTGRES_DB: ${POSTGRES_DB:-mdp}
+    volumes:
+      - mdp-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mdp} -d ${POSTGRES_DB:-mdp}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - internal
+
+  app:
+    image: ${MDP_IMAGE:-ghcr.io/reubenjanuardi/mdp-app:latest}
+    container_name: mdp-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Alamat basis data di dalam jaringan compose, menimpa nilai .env.
+      DATABASE_URL: postgres://${POSTGRES_USER:-mdp}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-mdp}
+      UPLOAD_DIR: /app/storage/uploads
+    volumes:
+      - mdp-uploads:/app/storage/uploads
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      # internal: bicara dengan db. hosiana_network: dijangkau cloudflared-tunnel.
+      - internal
+      - hosiana
+
+  # Job sekali jalan: menjalankan migrasi Drizzle (image target "migrator").
+  migrate:
+    profiles: [ "tools" ]
+    image: ${MDP_MIGRATE_IMAGE:-ghcr.io/reubenjanuardi/mdp-app:migrate}
+    container_name: mdp-migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-mdp}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-mdp}
+    networks:
+      - internal
+
+volumes:
+  mdp-pgdata:
+  mdp-uploads:
+
+networks:
+  internal:
+    name: mdp-app_internal
+    driver: bridge
+  # Network bersama tempat cloudflared-tunnel berada (dipakai juga oleh keuangan-gereja-app).
+  hosiana:
+    name: hosiana_network
+    external: true

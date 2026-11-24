@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Build mandiri (server.js + node_modules minimal) agar bisa dibungkus image Docker kecil.
+  output: "standalone",
   reactCompiler: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",

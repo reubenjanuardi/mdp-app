@@ -1,0 +1,9 @@
+# Skrip shell, Dockerfile, dan YAML harus LF: CRLF bikin "bad interpreter" di VPS/Linux.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

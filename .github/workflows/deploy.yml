@@ -1,0 +1,173 @@
+name: Deploy ke VPS
+
+# Alur: lint & tes -> build image -> push ke GHCR -> SSH ke VPS -> pull, migrasi, up -d.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-produksi
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  quality:
+    name: Lint & tes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pemeriksaan tipe
+        run: npx tsc --noEmit
+      - name: Tes unit
+        run: npm test
+      # Biome masih menyisakan temuan lama di kode yang belum dibersihkan, jadi belum memblokir deploy.
+      # Hapus continue-on-error begitu `npm run check` bersih.
+      - name: Biome check (informasional)
+        run: npm run check
+        continue-on-error: true
+
+  build:
+    name: Build & push image
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login ke GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Metadata image aplikasi
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=long,prefix=sha-
+
+      - name: Build & push image aplikasi
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runner
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_APP_URL=${{ vars.APP_URL || 'https://mdp.example.com' }}
+          cache-from: type=gha,scope=app
+          cache-to: type=gha,mode=max,scope=app
+
+      - name: Build & push image migrasi
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: migrator
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:migrate
+          cache-from: type=gha,scope=migrator
+          cache-to: type=gha,mode=max,scope=migrator
+
+  deploy:
+    name: Deploy ke VPS
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.APP_URL }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Salin berkas compose ke VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: |
+            docker-compose.prod.yml
+            .env.production.example
+          target: /opt/stacks/mdp-app
+          overwrite: true
+          strip_components: 0
+
+      - name: Pull image, migrasi, dan jalankan ulang container
+        uses: appleboy/ssh-action@v1
+        env:
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MDP_IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          MDP_MIGRATE_IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:migrate
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script_stop: true
+          envs: GHCR_USER,GHCR_TOKEN,MDP_IMAGE,MDP_MIGRATE_IMAGE
+          script: |
+            set -euo pipefail
+            cd /opt/stacks/mdp-app
+
+            echo "== Login GHCR =="
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+            echo "== Pull image $MDP_IMAGE =="
+            docker compose -f docker-compose.prod.yml --profile tools pull app migrate
+
+            echo "== Migrasi basis data =="
+            docker compose -f docker-compose.prod.yml --profile tools run --rm migrate
+
+            echo "== Jalankan ulang container =="
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            echo "== Tunggu healthcheck =="
+            # Tidak ada port di host (trafik masuk lewat Cloudflare Tunnel), jadi healthcheck
+            # dijalankan di dalam container aplikasi.
+            for i in $(seq 1 30); do
+              if docker compose -f docker-compose.prod.yml exec -T app \
+                node -e "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"; then
+                echo "Aplikasi sehat setelah ${i} percobaan."
+                break
+              fi
+              if [ "$i" -eq 30 ]; then
+                echo "Aplikasi tidak sehat, menampilkan log terakhir:"
+                docker compose -f docker-compose.prod.yml logs --tail=80 app
+                exit 1
+              fi
+              sleep 3
+            done
+
+            echo "== Simpan tag image yang berjalan ke .env =="
+            if grep -q '^MDP_IMAGE=' .env; then
+              sed -i "s|^MDP_IMAGE=.*|MDP_IMAGE=${MDP_IMAGE}|" .env
+            else
+              echo "MDP_IMAGE=${MDP_IMAGE}" >> .env
+            fi
+
+            echo "== Bersihkan image lama =="
+            docker image prune -f

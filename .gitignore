@@ -20,6 +20,8 @@
 .DS_Store
 *.pem
 *.sh
+# Skrip deploy tetap ikut di-commit meski aturan di atas mengabaikan berkas .sh.
+!/deploy/*.sh
 
 # debug
 npm-debug.log*

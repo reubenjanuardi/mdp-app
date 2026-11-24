@@ -46,6 +46,22 @@ Seed menggeser tanggal jatuh tempo relatif ke hari dijalankan, agar penanda H-3 
 | `npm run check` | Biome lint dan format |
 | `npm run build` | Build produksi |
 
+## Deploy
+
+Produksi berjalan sebagai stack Docker Compose di VPS yang sama dengan portal-aplikasi-gereja: container `mdp-app` (Next.js) + `mdp-db` (PostgreSQL 17), diekspos lewat Cloudflare Tunnel yang sudah ada (tanpa Nginx vhost atau certbot di host). Setiap push ke `main`, GitHub Actions menjalankan cek tipe dan tes, membangun image, push ke GHCR, lalu VPS menarik image itu dan menjalankan migrasi sebelum container diganti.
+
+| Berkas | Fungsi |
+| --- | --- |
+| `Dockerfile` | Target `runner` (Next.js standalone) dan `migrator` (Drizzle migrate) |
+| `docker-compose.prod.yml` | `app` + `db` + job `migrate`, volume data dan unggahan |
+| `.github/workflows/deploy.yml` | Lint, tes, build, push GHCR, deploy lewat SSH |
+| `deploy/vps-setup.sh` | Bootstrap sekali jalan di VPS: cek prasyarat, buat `/opt/stacks/mdp-app`, isi `.env` |
+| `.env.production.example` | Template `.env` untuk VPS |
+
+Panduan lengkap (secrets yang dibutuhkan, deploy pertama, rollback, backup harian, checklist go-live): [`docs/DEPLOY.md`](docs/DEPLOY.md).
+
+Endpoint `GET /api/health` dipakai healthcheck Docker dan smoke test setelah deploy; endpoint ini satu-satunya rute yang tidak melewati `src/proxy.ts`.
+
 ## Halaman
 
 | Kode | Rute | Peran |

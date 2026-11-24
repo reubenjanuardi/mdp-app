@@ -59,6 +59,6 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  // Semua halaman kecuali aset statis dan berkas unggahan publik.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|brand/|robots.txt).*)"],
+  // Semua halaman kecuali aset statis, berkas unggahan publik, dan healthcheck Docker.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|brand/|robots.txt|api/health).*)"],
 };

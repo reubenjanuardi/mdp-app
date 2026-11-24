@@ -1,0 +1,17 @@
+# Jangan kirim berkas yang tidak dibutuhkan ke konteks build Docker.
+node_modules
+.next
+.git
+.github
+storage
+*.log
+.env
+.env.*
+!.env.example
+tsconfig.tsbuildinfo
+next-env.d.ts
+README.md
+LICENSE
+docs
+tests
+deploy
