@@ -235,23 +235,6 @@ export const pembayaran = pgTable("pembayaran", {
 });
 
 // ---------- ERD: pengiriman ----------
-// Rekap historis dari spreadsheet perusahaan. Tidak dipaksa ke PO/resi karena kolom tersebut tidak ada pada sumber.
-export const rekap_pengiriman = pgTable("rekap_pengiriman", {
-  id_rekap_pengiriman: varchar("id_rekap_pengiriman").primaryKey(),
-  tanggal: date("tanggal"),
-  penerima: varchar("penerima").notNull(),
-  barang: varchar("barang").notNull(),
-  keterangan: text("keterangan"),
-  jumlah_koli: kuantitas("jumlah_koli"),
-  jumlah_satuan: kuantitas("jumlah_satuan"),
-  harga_per_pcs: uang("harga_per_pcs"),
-  total: uang("total"),
-  tanggal_pembayaran: date("tanggal_pembayaran"),
-  total_pembayaran: uang("total_pembayaran"),
-  dicatat_oleh: varchar("dicatat_oleh").references(() => pengguna.id_pengguna),
-  ...jejak,
-});
-
 export const pengiriman = pgTable("pengiriman", {
   id_pengiriman: varchar("id_pengiriman").primaryKey(),
   id_pesanan: varchar("id_pesanan")
