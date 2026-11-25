@@ -1,0 +1,1 @@
+ALTER TABLE "produksi_harian" ADD COLUMN "nomor_operator" integer;

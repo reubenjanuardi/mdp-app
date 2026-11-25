@@ -36,7 +36,7 @@ export const MATRIKS: Record<Modul, Partial<Record<Peran, readonly Aksi[]>>> = {
   jatuhTempo: { Owner: ["L"], Admin: ["L"], "Staf Operasional": ["L"] },
   followUp: { Admin: ["L", "T", "U", "H"] },
   pengiriman: { Owner: ["L"], Admin: ["L", "T", "U", "H"], "Staf Pengiriman": ["L", "T", "U", "H"] },
-  produksi: { Owner: ["L"], Admin: ["L"], "Staf Operasional": ["L"], "Staf Produksi": ["L", "U"] },
+  produksi: { Owner: ["L"], Admin: ["L"], "Staf Operasional": ["L"], "Staf Produksi": ["L", "T", "U"] },
   dashboard: { Owner: ["L"], Admin: ["L"], "Staf Operasional": ["L"], "Staf Produksi": ["L"] },
   pengguna: { Admin: ["L", "T", "U"] },
 };

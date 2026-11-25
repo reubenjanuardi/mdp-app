@@ -8,6 +8,20 @@
       "when": 1794999096205,
       "tag": "0000_erd_diperluas",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795616277911,
+      "tag": "0001_superb_killmonger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795616345948,
+      "tag": "0002_slippery_bulldozer",
+      "breakpoints": true
     }
   ]
 }

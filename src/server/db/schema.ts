@@ -155,6 +155,20 @@ export const riwayat_produksi = pgTable("riwayat_produksi", {
   dibuat_pada: waktu("dibuat_pada").notNull().defaultNow(),
 });
 
+// Realisasi harian mengikuti kolom laporan Cupseal/Rubber Seal: tanggal, mesin, operator, kode produk, jumlah.
+export const produksi_harian = pgTable("produksi_harian", {
+  id_produksi_harian: varchar("id_produksi_harian").primaryKey(),
+  tanggal: date("tanggal").notNull(),
+  mesin: varchar("mesin").notNull(),
+  nomor_operator: integer("nomor_operator"),
+  operator: varchar("operator").notNull(),
+  kode_produk: varchar("kode_produk").notNull(),
+  jumlah_hasil: kuantitas("jumlah_hasil").notNull(),
+  catatan: text("catatan"),
+  dicatat_oleh: varchar("dicatat_oleh").references(() => pengguna.id_pengguna),
+  ...jejak,
+});
+
 // ---------- ERD: faktur (Nota Faktur) ----------
 // UNIQUE pada id_pesanan di ERD dihapus: satu pesanan boleh memiliki beberapa nota (PRD 8.3 no. 2).
 export const faktur = pgTable(
@@ -221,6 +235,23 @@ export const pembayaran = pgTable("pembayaran", {
 });
 
 // ---------- ERD: pengiriman ----------
+// Rekap historis dari spreadsheet perusahaan. Tidak dipaksa ke PO/resi karena kolom tersebut tidak ada pada sumber.
+export const rekap_pengiriman = pgTable("rekap_pengiriman", {
+  id_rekap_pengiriman: varchar("id_rekap_pengiriman").primaryKey(),
+  tanggal: date("tanggal"),
+  penerima: varchar("penerima").notNull(),
+  barang: varchar("barang").notNull(),
+  keterangan: text("keterangan"),
+  jumlah_koli: kuantitas("jumlah_koli"),
+  jumlah_satuan: kuantitas("jumlah_satuan"),
+  harga_per_pcs: uang("harga_per_pcs"),
+  total: uang("total"),
+  tanggal_pembayaran: date("tanggal_pembayaran"),
+  total_pembayaran: uang("total_pembayaran"),
+  dicatat_oleh: varchar("dicatat_oleh").references(() => pengguna.id_pengguna),
+  ...jejak,
+});
+
 export const pengiriman = pgTable("pengiriman", {
   id_pengiriman: varchar("id_pengiriman").primaryKey(),
   id_pesanan: varchar("id_pesanan")
